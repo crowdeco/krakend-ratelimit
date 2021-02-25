@@ -9,7 +9,7 @@ import (
 	krakendgin "github.com/devopsfaith/krakend/router/gin"
 	"github.com/gin-gonic/gin"
 
-	"github.com/devopsfaith/krakend-ratelimit"
+	krakendrate "github.com/devopsfaith/krakend-ratelimit"
 	"github.com/devopsfaith/krakend-ratelimit/rate"
 	"github.com/devopsfaith/krakend-ratelimit/rate/router"
 )
@@ -51,7 +51,7 @@ func NewEndpointRateLimiterMw(tb rate.Limiter) EndpointMw {
 	return func(next gin.HandlerFunc) gin.HandlerFunc {
 		return func(c *gin.Context) {
 			if !tb.Allow() {
-				c.AbortWithError(503, krakendrate.ErrLimited)
+				c.AbortWithError(http.StatusTooManyRequests, krakendrate.ErrLimited)
 				return
 			}
 			next(c)

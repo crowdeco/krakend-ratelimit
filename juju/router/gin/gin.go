@@ -52,7 +52,7 @@ func NewEndpointRateLimiterMw(tb juju.Limiter) EndpointMw {
 	return func(next gin.HandlerFunc) gin.HandlerFunc {
 		return func(c *gin.Context) {
 			if !tb.Allow() {
-				c.AbortWithError(503, krakendrate.ErrLimited)
+				c.AbortWithError(http.StatusTooManyRequests, krakendrate.ErrLimited)
 				return
 			}
 			next(c)
